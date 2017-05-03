@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 #include <speex/speex_resampler.h>
 #include <speex/speexdsp_config_types.h>  
 #include <speex/speexdsp_types.h>  
@@ -75,13 +77,15 @@ int ResamplerState_Voices(int channel,const char *inputFile,int inRate,const cha
 	int target_sr=outRate;//重采样后采样率  
 	int ret=-1;
 	SpeexResamplerState * resampler = speex_resampler_init(channel, sr, target_sr, 10, NULL);//初始化  
-	speex_resampler_skip_zeros(resampler);  
-	char *input=(char *)calloc(1,inRate/10*2);
+	speex_resampler_skip_zeros(resampler);
+	int inSize=inRate/10;  
+	char *input=(char *)calloc(1,inSize*2);
 	if(input==NULL){
 		perror("calloc input audio memory failed");
 		return -1;
 	}
-	char *output=(char *)calloc(1,outRate/10*2+256);
+	int outSize = outRate/10+256;
+	char *output=(char *)calloc(1,outSize*2);
 	if(output==NULL){
 		perror("calloc output audio memory failed");
 		goto exit0;
@@ -99,12 +103,12 @@ int ResamplerState_Voices(int channel,const char *inputFile,int inRate,const cha
 	int readed=0;
 	int in_len,out_len;
 	while (1)  {  
-    		readed=fread(input,2,800,fdr);  
+    		readed=fread(input,2,inSize,fdr);  
     		if (readed<=0){  
         		break;  
     		}  
     		in_len=readed;   
-    		out_len=12800;//输出缓冲大小  
+		out_len = outSize;
     		speex_resampler_process_int(resampler, 0, input, &in_len,output, &out_len); //output传入缓冲大小，传出实际大小  
     		fwrite(output,2,out_len,fdw);  
 	}		  
