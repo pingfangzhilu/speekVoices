@@ -1,0 +1,7 @@
+---- min_sinc_table_length Matches (6 in 1 files) ----
+Resample.c (libspeexdsp):   spx_uint32_t min_sinc_table_length;
+Resample.c (libspeexdsp):      min_sinc_table_length = st->filt_len*st->den_rate;
+Resample.c (libspeexdsp):      min_sinc_table_length = st->filt_len*st->oversample+8;
+Resample.c (libspeexdsp):   if (st->sinc_table_length < min_sinc_table_length)
+Resample.c (libspeexdsp):      spx_word16_t *sinc_table = (spx_word16_t *)speex_realloc(st->sinc_table,min_sinc_table_length*sizeof(spx_word16_t));
+Resample.c (libspeexdsp):      st->sinc_table_length = min_sinc_table_length;
